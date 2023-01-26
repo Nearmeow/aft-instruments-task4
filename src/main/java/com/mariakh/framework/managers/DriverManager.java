@@ -32,8 +32,7 @@ public class DriverManager {
 
     public WebDriver getDriver() {
         if (driver == null) {
-            //initDriver();
-            initRemoteDriver();
+            initDriver();
         }
         return driver;
     }
@@ -60,30 +59,6 @@ public class DriverManager {
                 System.setProperty("webdriver.edge.driver", propManager.getProperty("path.edge.driver.windows"));
                 driver = new EdgeDriver();
                 break;
-        }
-    }
-
-    private void initRemoteDriver() {
-        String browser = System.getProperty("browser", "chrome");
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS,true);
-        capabilities.setCapability("selenoid:options", Map.<String, Object>of(
-                "enableVNC", true,
-                "enableVideo", false
-        ));
-        capabilities.setBrowserName(browser);
-        switch (browser) {
-            case "chrome":
-            case "firefox":
-                capabilities.setVersion("109.0");
-                break;
-            case "opera":
-                capabilities.setVersion("94.0");
-        }
-        try {
-            driver = new RemoteWebDriver(URI.create("http://149.154.71.152:8080/wd/hub").toURL(), capabilities);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         }
     }
 }
