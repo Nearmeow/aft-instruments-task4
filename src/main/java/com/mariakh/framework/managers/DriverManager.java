@@ -4,6 +4,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.util.Map;
 
 public class DriverManager {
 
@@ -25,7 +32,8 @@ public class DriverManager {
 
     public WebDriver getDriver() {
         if (driver == null) {
-            initDriver();
+            //initDriver();
+            initRemoteDriver();
         }
         return driver;
     }
@@ -51,6 +59,31 @@ public class DriverManager {
             case "edge":
                 System.setProperty("webdriver.edge.driver", propManager.getProperty("path.edge.driver.windows"));
                 driver = new EdgeDriver();
+                break;
+        }
+    }
+
+    private void initRemoteDriver() {
+        String browser = System.getProperty("browser", "chrome");
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS,true);
+        capabilities.setCapability("selenoid:options", Map.<String, Object>of(
+                "enableVNC", true,
+                "enableVideo", false
+        ));
+        capabilities.setBrowserName(browser);
+        switch (browser) {
+            case "chrome":
+            case "firefox":
+                capabilities.setVersion("109.0");
+                break;
+            case "opera":
+                capabilities.setVersion("94.0");
+        }
+        try {
+            driver = new RemoteWebDriver(URI.create("http://149.154.71.152:8080/wd/hub").toURL(), capabilities);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
     }
 }
