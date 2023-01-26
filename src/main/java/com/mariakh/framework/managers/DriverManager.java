@@ -11,6 +11,8 @@ public class DriverManager {
 
     private WebDriver driver;
 
+    private TestPropManager propManager = TestPropManager.getInstance();
+
     private DriverManager() {
     }
 
@@ -36,22 +38,18 @@ public class DriverManager {
     }
 
     private void initDriver() {
-        /*System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        driver = new ChromeDriver();
-*/
-
-        String browser = System.getProperty("browser", "edge");
+        String browser = System.getProperty("browser", "chrome");
         switch (browser) {
             case "chrome":
-                System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
+                System.setProperty("webdriver.chrome.driver", propManager.getProperty("path.chrome.driver.windows"));
                 driver = new ChromeDriver();
                 break;
             case "firefox":
-                System.setProperty("webdriver.gecko.driver", "src/main/resources/geckodriver.exe");
+                System.setProperty("webdriver.gecko.driver", propManager.getProperty("path.firefox.driver.windows"));
                 driver = new FirefoxDriver();
                 break;
             case "edge":
-                System.setProperty("webdriver.edge.driver", "src/main/resources/msedgedriver.exe");
+                System.setProperty("webdriver.edge.driver", propManager.getProperty("path.edge.driver.windows"));
                 driver = new EdgeDriver();
         }
     }
