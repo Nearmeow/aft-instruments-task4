@@ -22,9 +22,6 @@ public class MortgagePage extends BasePage {
     @FindBy(xpath = "//iframe[@sandbox]")
     private WebElement mortgageIframe;
 
-    @FindBy(xpath = "//div[@class='_2RwsL_oKFrEK9oh3oTaIT0']")
-    private List<WebElement> checkBoxList;
-
     @FindBy(xpath = "//div[@data-test-id='realty-cost-input']//input")
     private WebElement houseCostInput;
 
@@ -52,16 +49,13 @@ public class MortgagePage extends BasePage {
         return this;
     }
 
-    @Step("Переключение чекбокса 'Страхование жизни и здоровья'.")
-    public MortgagePage clickCheckbox() {
-        for (WebElement elem : checkBoxList) {
-            if (elem.findElement(By.xpath("./span[1]")).getText().equals("Страхование жизни и здоровья")) {
-                WebElement checkBox = elem.findElement(By.xpath(".//input"));
-                scrollToElementJs(checkBox);
-                checkBox.click();
-                wait.until(ExpectedConditions.attributeToBe(checkBox, "aria-checked", "false"));
-            }
-        }
+    @Step("Переключение чекбокса '{checkboxName}'.")
+    public MortgagePage clickCheckbox(String checkboxName) {
+        WebElement checkbox = driverManager.getDriver().findElement(By.xpath("//span[contains(text(), '"
+                + checkboxName + "')]/following-sibling::span//input"));
+        scrollToElementJs(checkbox);
+        checkbox.click();
+        wait.until(ExpectedConditions.attributeToBe(checkbox, "aria-checked", "false"));
         return this;
     }
 
@@ -111,7 +105,6 @@ public class MortgagePage extends BasePage {
     }
 
     private void getAndSaveResultInfo(WebElement resultBlock, String field) {
-
         String value = "";
         switch(field) {
             case "Ежемесячный платеж":
@@ -128,7 +121,8 @@ public class MortgagePage extends BasePage {
                 break;
             case "Необходимый доход":
                 value = resultBlock.findElement(By
-                                .xpath("//div[@class='hint-target-0-9-4']//span[contains(text(), 'Необходимый доход')]/..//span[contains(text(), '₽')]"))
+                                .xpath("//div[@class='hint-target-0-9-4']" +
+                                        "//span[contains(text(), 'Необходимый доход')]/..//span[contains(text(), '₽')]"))
                         .getText();
         }
         expectedValuesMap.put(field, cleanString(value));
@@ -136,6 +130,7 @@ public class MortgagePage extends BasePage {
 
     private WebElement getVisibleResultsBlock() {
         for (WebElement element : mainResultBlockList) {
+            System.out.println(element.getText());
             if (element.isDisplayed()) {
                 return element;
             }

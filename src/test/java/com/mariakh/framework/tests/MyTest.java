@@ -15,7 +15,7 @@ public class MyTest extends BaseTests {
                 .selectSubMenu("Ипотека на вторичное жильё")
                 .checkOpenMortgagePage()
                 .checkFrameAndSwitch()
-                .clickCheckbox()
+                .clickCheckbox("Страхование жизни и здоровья")
                 .fillFrameField("Стоимость недвижимости", "5180000")
                 .fillFrameField("Первоначальный взнос", "3058000")
                 .fillFrameField("Срок кредита", "30")

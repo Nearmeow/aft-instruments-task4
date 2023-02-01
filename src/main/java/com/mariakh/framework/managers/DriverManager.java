@@ -4,13 +4,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.util.Map;
 
 public class DriverManager {
 
@@ -45,7 +38,7 @@ public class DriverManager {
     }
 
     private void initDriver() {
-        String browser = System.getProperty("browser", "chrome");
+        String browser = System.getProperty("browser", "edge");
         switch (browser) {
             case "chrome":
                 System.setProperty("webdriver.chrome.driver", propManager.getProperty("path.chrome.driver.windows"));
